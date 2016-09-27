@@ -1,4 +1,25 @@
+# Windows #
+ 
+# Windows image file caches
+Thumbs.db 
+ 
+# Folder config file
+Desktop.ini
+ 
+# OSX #
+ 
+.DS_Store
+.svn
+ 
+# Thumbnails
+._*
+ 
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
 *.class
+
+# Java #
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -10,3 +31,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Sublime #
+*.sublime-workspace
+*.sublime-project
