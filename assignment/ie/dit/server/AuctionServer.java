@@ -70,13 +70,31 @@ class ClientHandler implements Runnable {
         msg = input.nextLine();
         System.out.println(Thread.currentThread().getName() + " input: " + msg);
 
+        if (isNumeric(msg)) {
+          int bid = Integer.parseInt(msg);
 
-        output.println("Recieved");
-      } while (!msg.equals("q") && !msg.equals("Q"));
-      System.out.println("Client disconnected");
-      client.close();
+          if (bid > itemHandler.getItemBid()) {
+            output.println("You are the highest bidder");
+            itemHandler.setItemBid(bid);
+          } else {
+            output.println("Bid is less then the highest bid");
+          }
+        } else {
+          if (msg.equals("I") || msg.equals("i")) {
+            output.println("The current bid is " + itemHandler.getItemBid());
+          } else if (msg.equals("q") || msg.equals("Q")) {
+            System.out.println("Client disconnected");
+            client.close();
+            break;
+          }
+        }
+      } while (true);
     } catch(IOException ioEx) {
         ioEx.printStackTrace();
     }
+  }
+
+  public static boolean isNumeric(String str) {
+    return str.matches("-?\\d+(\\.\\d+)?");
   }
 }

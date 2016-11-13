@@ -48,7 +48,7 @@ public class ClientThreadHandler implements Runnable {
     System.out.println("Current item: " + networkInput.nextLine().toString());
     System.out.println("Current bid: " +  networkInput.nextLine().toString());
     System.out.println("\nPlace a bid that is greater then the current bid. " +
-                       "\n1 - Get current bid " +
+                       "\nI - Get current bid info " +
                        "\nQ - Quit");
     System.out.println("*****************************************************");
 
@@ -56,12 +56,17 @@ public class ClientThreadHandler implements Runnable {
     String response = "";
     // Wait for user input
     do {
+      System.out.println("\nEnter a value: ");
       message = userInput.nextLine();
       output.println(message);
 
+      if (message.equals("q") || message.equals("Q")) {
+        break;
+      }
+
       response = networkInput.nextLine().toString();
       System.out.println("Response to ("+ message +"): " + response);
-    } while(!message.equals("q") && !message.equals("Q"));
+    } while(true);
 
     System.out.println("\nGoodbye");
     System.exit(1);

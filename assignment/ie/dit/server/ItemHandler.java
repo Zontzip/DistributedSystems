@@ -3,6 +3,7 @@ import java.util.*;
 public class ItemHandler extends Thread {
 
   Item currentItem;
+  String highestBidder;
 
   public ItemHandler(Item currentItem) {
     setItem(currentItem);
@@ -18,6 +19,18 @@ public class ItemHandler extends Thread {
 
   public int getItemBid() {
     return currentItem.getBid();
+  }
+
+  public void setItemBid(int bid) {
+    this.currentItem.setBid(bid);
+  }
+
+  public void setHighestBidder(String bidder) {
+    this.highestBidder = bidder;
+  }
+
+  public String getHighestBidder() {
+    return this.highestBidder;
   }
 }
 
