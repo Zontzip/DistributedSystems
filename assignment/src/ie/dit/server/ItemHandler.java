@@ -27,11 +27,11 @@ public class ItemHandler extends Thread {
     this.currentItem.setBid(bid);
   }
 
-  public void setHighestBidder(String bidder) {
+  public void setUsername(String bidder) {
     this.highestBidder = bidder;
   }
 
-  public String getHighestBidder() {
+  public String getUsername() {
     return this.highestBidder;
   }
 

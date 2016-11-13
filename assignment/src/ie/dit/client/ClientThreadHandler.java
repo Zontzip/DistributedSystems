@@ -54,8 +54,7 @@ public class ClientThreadHandler implements Runnable {
     do {
       System.out.println("\nEnter a value: ");
       Message message = new Message(this.username, userInput.nextLine());
-      System.out.println(message.toString());
-      output.println(message);
+      output.println(username + "," + message.getValue());
 
       if (message.getValue().equals("q") || message.getValue().equals("Q")) {
         break;

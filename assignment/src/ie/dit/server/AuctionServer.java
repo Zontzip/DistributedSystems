@@ -3,6 +3,7 @@ package ie.dit.server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import ie.dit.shared.Message;
 
 public class AuctionServer {
 
@@ -51,7 +52,7 @@ class ClientHandler implements Runnable {
   private Scanner input;
   private PrintWriter output;
   private ItemHandler itemHandler;
-  private String msg;
+  private String recieved;
 
   public ClientHandler(Socket socket, ItemHandler itemHandler) {
     this.client = socket;
@@ -69,22 +70,27 @@ class ClientHandler implements Runnable {
       System.out.println("\nWaiting for client input...");
 
       do {
-        msg = input.nextLine();
-        System.out.println(Thread.currentThread().getName() + " input: " + msg);
+        recieved = input.nextLine();
+        String[] parts = recieved.split(",");
+        Message msg = new Message(parts[0], parts[1]);
 
-        if (isNumeric(msg)) {
-          int bid = Integer.parseInt(msg);
+        System.out.println("User: " + msg.getUsername() + " bidded: " +
+              msg.getValue() + " on item: " + itemHandler.getItemName());
+
+        if (isNumeric(msg.getValue())) {
+          int bid = Integer.parseInt(msg.getValue());
 
           if (bid > itemHandler.getItemBid()) {
             output.println("You are the highest bidder");
             itemHandler.setItemBid(bid);
+            itemHandler.setUsername(msg.getUsername());
           } else {
             output.println("Bid is less then the highest bid");
           }
         } else {
-          if (msg.equals("I") || msg.equals("i")) {
+          if (msg.getValue().equals("I") || msg.getValue().equals("i")) {
             output.println("The current bid is " + itemHandler.getItemBid());
-          } else if (msg.equals("q") || msg.equals("Q")) {
+          } else if (msg.getValue().equals("q") || msg.getValue().equals("Q")) {
             System.out.println("Client disconnected");
             client.close();
             break;
