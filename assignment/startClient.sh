@@ -1,2 +1,1 @@
-cd src/client 
-java AuctionClient
+java -cp ./classes ie.dit.client.AuctionClient
