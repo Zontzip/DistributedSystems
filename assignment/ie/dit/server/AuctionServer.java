@@ -1,7 +1,3 @@
-/*
-  Take a client connection, create a new instance of ItemHandler and generate a
-  ClientHandler and pass a reference to the ItemHandler
-*/
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -22,17 +18,21 @@ public class AuctionServer {
 			System.exit(1);
     }
 
-    ItemHandler itemHandler = new ItemHandler();
+    List<Item> auctionItems = new ArrayList<Item>();
+    auctionItems.add(new Item("Bicycle", 100));
+    auctionItems.add(new Item("Car", 500));
+    auctionItems.add(new Item("Boat", 9000));
+    auctionItems.add(new Item("Wheelbarrow", 20));
+    auctionItems.add(new Item("House", 50000));
+    ItemHandler itemHandler = new ItemHandler(auctionItems.get(0));
 
     do {
       try {
         // Wait for client...
         Socket client = serverSocket.accept();
 
-        System.out.println("\nA client has connected.\n");
+        System.out.println("\nA client has connected.");
 
-        // Create a thread to handle communication with this client and pass the
-        // constructor for this thread a regerence to the relevant socket
         Thread handler = new Thread(new ClientHandler(client, itemHandler));
         handler.start();
       }
@@ -40,5 +40,43 @@ public class AuctionServer {
         err.printStackTrace();
       }
     } while(true);
+  }
+}
+
+class ClientHandler implements Runnable {
+
+  private Socket client;
+  private Scanner input;
+  private PrintWriter output;
+  private ItemHandler itemHandler;
+  private String msg;
+
+  public ClientHandler(Socket socket, ItemHandler itemHandler) {
+    this.client = socket;
+    this.itemHandler = itemHandler;
+  }
+
+  public void run() {
+    try {
+      input = new Scanner(client.getInputStream(), "UTF8");
+      output = new PrintWriter(client.getOutputStream(), true);
+
+      output.println(itemHandler.getItemName());
+      output.println(itemHandler.getItemBid());
+
+      System.out.println("\nWaiting for client input...");
+
+      do {
+        msg = input.nextLine();
+        System.out.println(Thread.currentThread().getName() + " input: " + msg);
+
+
+        output.println("Recieved");
+      } while (!msg.equals("q") && !msg.equals("Q"));
+      System.out.println("Client disconnected");
+      client.close();
+    } catch(IOException ioEx) {
+        ioEx.printStackTrace();
+    }
   }
 }
