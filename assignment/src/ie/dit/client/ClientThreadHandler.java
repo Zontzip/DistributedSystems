@@ -1,14 +1,9 @@
-/*
-  Author: Alex Kiernan
-
-  Description :
-  Manages the users interaction with the server including all input and output
-
-*/
+package ie.dit.client;
 
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import ie.dit.shared.Message;
 
 public class ClientThreadHandler implements Runnable {
 
@@ -18,7 +13,7 @@ public class ClientThreadHandler implements Runnable {
   private PrintWriter output;
   private Scanner networkInput;
   private Scanner userInput;
-  private int currentTime;
+  private String username;
 
   public ClientThreadHandler (InetAddress host, int PORT) {
     this.host = host;
@@ -35,40 +30,50 @@ public class ClientThreadHandler implements Runnable {
       // Look for user input
       userInput = new Scanner(System.in);
 
-      // Show that we succesfully opened input and output streams
       System.out.println("Opened input and output streams");
 
     } catch (IOException e) {
       e.printStackTrace();
     }
 
+    System.out.println("Enter your name: ");
+    setUsername(userInput.nextLine());
+
     // Give the user instructions
     System.out.println("\n*****************************************************");
-    System.out.println("You have entered the Auction.\n");
+    System.out.println("You have entered the Auction - "+ username +"\n");
     System.out.println("Current item: " + networkInput.nextLine().toString());
     System.out.println("Current bid: " +  networkInput.nextLine().toString());
-    System.out.println("\nPlace a bid that is greater then the current bid. " +
+    System.out.println("\nPlace a numeric bid that is greater then the current bid. " +
                        "\nI - Get current bid info " +
                        "\nQ - Quit");
     System.out.println("*****************************************************");
 
-    String message = "";
     String response = "";
     // Wait for user input
     do {
       System.out.println("\nEnter a value: ");
-      message = userInput.nextLine();
+      Message message = new Message(this.username, userInput.nextLine());
+      System.out.println(message.toString());
       output.println(message);
 
-      if (message.equals("q") || message.equals("Q")) {
+      if (message.getValue().equals("q") || message.getValue().equals("Q")) {
         break;
       }
 
       response = networkInput.nextLine().toString();
-      System.out.println("Response to ("+ message +"): " + response);
+      System.out.println("Response to ("+ message.getValue() +"): " + response);
     } while(true);
 
     System.out.println("\nGoodbye");
     System.exit(1);
+  }
+
+  public String getUsername() {
+    return this.username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
   }
 }

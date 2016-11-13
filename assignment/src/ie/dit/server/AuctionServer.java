@@ -1,3 +1,5 @@
+package ie.dit.server;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -86,6 +88,8 @@ class ClientHandler implements Runnable {
             System.out.println("Client disconnected");
             client.close();
             break;
+          } else {
+            output.println("Value not recognized");
           }
         }
       } while (true);

@@ -1,10 +1,4 @@
-/*
-  Author: Alex Kiernan
-
-  Description
-    - Establish a connection with a server
-    - Allow user to send input to the server
-*/
+package ie.dit.client;
 
 import java.io.*;
 import java.net.*;

@@ -1,3 +1,5 @@
+package ie.dit.server;
+
 import java.util.*;
 
 public class ItemHandler extends Thread {
@@ -32,6 +34,7 @@ public class ItemHandler extends Thread {
   public String getHighestBidder() {
     return this.highestBidder;
   }
+
 }
 
 class Item {
