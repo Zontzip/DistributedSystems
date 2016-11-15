@@ -12,7 +12,6 @@ public class ClientHandler implements Runnable {
   private PrintWriter output;
   private ItemHandler itemHandler;
   private String recieved;
-  private Timer timer;
 
   public ClientHandler(Socket socket, ItemHandler itemHandler) {
     this.client = socket;

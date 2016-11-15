@@ -4,8 +4,8 @@ import java.util.*;
 
 public class ItemHandler extends Thread {
 
-  Item currentItem;
-  String highestBidder;
+  private Item currentItem;
+  private String highestBidder;
 
   public ItemHandler(Item currentItem) {
     setItem(currentItem);
@@ -33,6 +33,13 @@ public class ItemHandler extends Thread {
 
   public String getUsername() {
     return this.highestBidder;
+  }
+
+  public void setTime() {
+  }
+
+  public int getTime() {
+    return 1;
   }
 
 }
