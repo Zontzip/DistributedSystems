@@ -24,8 +24,11 @@ public class ClientHandler implements Runnable {
   public ClientHandler(Socket socket) {
     this.client = socket;
     this.auctionHandler = AuctionHandler.getInstance();
-    this.userHandler = userHandler;
+    this.userHandler = new UserHandler(this);
     this.auctionHandler.addUserHandler(this.userHandler);
+
+    this.inbox = new LinkedList<>();
+    this.outbox = new LinkedList<>();
     try {
       this.input = new Scanner(client.getInputStream(), "UTF8");
       this.output = new PrintWriter(client.getOutputStream(), true);
@@ -37,16 +40,18 @@ public class ClientHandler implements Runnable {
   /**
    * Scan inbox and outbox for new messages. Messages can be added to outbox (to
    * be delivered to the client) by the user handler and added to inbox by the
-   * auction server. 
+   * auction server.
    */
   public void run() {
       do {
         String recieved = input.nextLine();
         inbox.add(recieved);
+        System.out.println("Message added to queue");
 
         while(!inbox.isEmpty()) {
           String msg = inbox.remove();
-          this.userHandler.handleMessageFromBuffer(msg);
+          System.out.println("Message: " + msg);
+          userHandler.handleMessage(msg);
         }
 
         while(!outbox.isEmpty()) {
@@ -56,7 +61,7 @@ public class ClientHandler implements Runnable {
       } while (true);
   }
 
-  public void addToOutboxQueue(String msg) {
+  public void addToOutbox(String msg) {
     outbox.add(msg);
   }
 }

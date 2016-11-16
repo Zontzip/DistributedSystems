@@ -40,7 +40,8 @@ public class ClientThreadHandler implements Runnable {
     }
 
     System.out.println("Enter your name: ");
-    setUsername(userInput.nextLine());
+    //setUsername(userInput.nextLine());
+    setUsername("Alex");
 
     // Give the user instructions
     System.out.println("\n*****************************************************");

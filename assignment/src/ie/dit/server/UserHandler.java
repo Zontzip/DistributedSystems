@@ -32,10 +32,10 @@ public class UserHandler {
   }
 
   public void sendMessageToClient(String msg) {
-    this.clientHandler.addToOutboxQueue(msg);
+    this.clientHandler.addToOutbox(msg);
   }
 
-  public void handleMessageFromBuffer(String msg) {
-    
+  public void handleMessage(String msg) {
+    System.out.println("Message recieved");
   }
 }
