@@ -25,6 +25,7 @@ public class ItemHandler extends Thread {
       if (countdown <= 0) {
         timer.cancel();
         notifyClients("Auction has ended");
+        finalizeAuction();
       } else {
         notifyClients("There is " + countdown + " secs left");
         countdown = countdown - 10;
@@ -68,6 +69,14 @@ public class ItemHandler extends Thread {
 
     for(ClientHandler client : clientList) {
       client.sendMessage(msg);
+    }
+  }
+
+  public void finalizeAuction() {
+    if (getUsername() == null) {
+      notifyClients("Item not sold");
+    } else {
+      notifyClients("Item was sold to: " + getUsername());
     }
   }
 

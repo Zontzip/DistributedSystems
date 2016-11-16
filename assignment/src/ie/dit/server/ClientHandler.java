@@ -80,10 +80,6 @@ public class ClientHandler implements Runnable {
     return str.matches("-?\\d+(\\.\\d+)?");
   }
 
-  public void setTimer(int seconds) {
-
-  }
-
   public void sendMessage(String msg) {
     output.println(msg);
   }
@@ -92,6 +88,19 @@ public class ClientHandler implements Runnable {
 
     for(ClientHandler client : clientList) {
       client.sendMessage(msg);
+    }
+  }
+
+  public void updateItem() {
+    for(ClientHandler client : clientList) {
+      List<Item> auctionsItems = AuctionServer.getItemList();
+
+      if (!auctionsItems.isEmpty()) {
+        client.itemHandler.setItem(auctionsItems.get(0));
+        notifyClients("New auction started");
+      } else {
+        notifyClients("Auction has ended");
+      }
     }
   }
 }

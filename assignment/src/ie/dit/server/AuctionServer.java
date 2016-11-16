@@ -62,6 +62,17 @@ public class AuctionServer {
     auctionItems.add(new Item(name, price));
   }
 
+  public static synchronized void removeItem(String name) {
+    Iterator<Item> it = auctionItems.iterator();
+
+    while (it.hasNext()) {
+      Item item = it.next();
+      if (item.getName().equals(name)) {
+        it.remove();
+      }
+    }
+  }
+
   public static synchronized void addClient(ClientHandler client) {
     System.out.println("Client added to list");
     clientList.add(client);
@@ -69,5 +80,9 @@ public class AuctionServer {
 
   public static List<ClientHandler> getClientList() {
     return clientList;
+  }
+
+  public static List<Item> getItemList() {
+    return auctionItems;
   }
 }
