@@ -1,10 +1,9 @@
-package ie.dit.handler;
+package ie.dit.server;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import ie.dit.business.Message;
 import ie.dit.business.Item;
 
 public class ItemHandler {
@@ -16,6 +15,7 @@ public class ItemHandler {
   public ItemHandler() {
     itemFactory = ItemFactory.getInstance();
     setItem(itemFactory.getItem());
+    System.out.println(this.item.toString());
   }
 
   public void setItem(Item item) {

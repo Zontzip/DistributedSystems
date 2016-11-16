@@ -1,9 +1,9 @@
-package ie.dit.handler;
+package ie.dit.server;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+
 import ie.dit.business.Item;
 
 public class ItemFactory {
@@ -31,8 +31,7 @@ public class ItemFactory {
   }
 
   public static synchronized Item getItem() {
-    int randomIndex = ThreadLocalRandom.current().nextInt(auctionItems.size(),
-      auctionItems.size() + 1);
+    int randomIndex = randInt(0, auctionItems.size());
     return (auctionItems.get(randomIndex));
   }
 
@@ -44,5 +43,11 @@ public class ItemFactory {
         it.remove();
       }
     }
+  }
+
+  public static int randInt(int min, int max) {
+    Random rand = new Random();
+    int randomNum = rand.nextInt((max - min)) + min;
+    return randomNum;
   }
 }

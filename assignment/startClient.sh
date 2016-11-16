@@ -1,1 +1,1 @@
-java -cp ./classes ie.dit.handler.AuctionClient
+java -cp ./classes ie.dit.client.AuctionClient

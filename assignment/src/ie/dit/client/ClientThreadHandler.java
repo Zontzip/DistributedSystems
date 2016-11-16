@@ -1,4 +1,4 @@
-package ie.dit.handler;
+package ie.dit.client;
 
 import java.net.*;
 import java.io.*;
