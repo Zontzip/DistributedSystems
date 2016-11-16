@@ -1,4 +1,4 @@
-package ie.dit.server;
+package ie.dit.business;
 
 import java.util.*;
 

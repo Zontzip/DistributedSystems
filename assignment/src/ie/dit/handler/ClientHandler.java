@@ -1,9 +1,11 @@
-package ie.dit.server;
+package ie.dit.handler;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import ie.dit.shared.Message;
+
+import ie.dit.business.Message;
+import ie.dit.business.Item;
 
 public class ClientHandler implements Runnable {
 

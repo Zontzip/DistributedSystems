@@ -1,4 +1,4 @@
-package ie.dit.shared;
+package ie.dit.business;
 
 public class Message {
   private String username;
