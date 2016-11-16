@@ -11,7 +11,6 @@ public class ClientThreadHandler implements Runnable {
   private int PORT;
   private InetAddress host;
   private PrintWriter output;
-  private Scanner networkInput;
   private Scanner userInput;
   private String username;
 
@@ -25,10 +24,12 @@ public class ClientThreadHandler implements Runnable {
       socket = new Socket(host, PORT);
 
       output = new PrintWriter(socket.getOutputStream(), true);
-      networkInput = new Scanner(socket.getInputStream());
 
       // Look for user input
       userInput = new Scanner(System.in);
+
+      ServerResponseHandler networkInput = new ServerResponseHandler(socket);
+      new Thread(networkInput).start();
 
       System.out.println("Opened input and output streams");
 
@@ -42,8 +43,8 @@ public class ClientThreadHandler implements Runnable {
     // Give the user instructions
     System.out.println("\n*****************************************************");
     System.out.println("You have entered the Auction - "+ username +"\n");
-    System.out.println("Current item: " + networkInput.nextLine().toString());
-    System.out.println("Current bid: " +  networkInput.nextLine().toString());
+    System.out.println("Current item: ");
+    System.out.println("Current bid: ");
     System.out.println("\nPlace a numeric bid that is greater then the current bid. " +
                        "\nI - Get current bid info " +
                        "\nQ - Quit");
@@ -59,9 +60,6 @@ public class ClientThreadHandler implements Runnable {
       if (message.getValue().equals("q") || message.getValue().equals("Q")) {
         break;
       }
-
-      response = networkInput.nextLine().toString();
-      System.out.println("Response to ("+ message.getValue() +"): " + response);
     } while(true);
 
     System.out.println("\nGoodbye");
@@ -74,5 +72,21 @@ public class ClientThreadHandler implements Runnable {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  private class ServerResponseHandler implements Runnable {
+    private Scanner networkInput;
+
+    ServerResponseHandler(Socket socket) throws IOException {
+      networkInput = new Scanner(socket.getInputStream());
+    }
+
+    public void run() {
+      String serverMessage;
+      while(true) {
+          serverMessage = networkInput.nextLine().toString();
+          System.out.println(serverMessage);
+      }
+    }
   }
 }

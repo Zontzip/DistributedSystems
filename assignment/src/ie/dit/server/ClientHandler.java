@@ -13,9 +13,14 @@ public class ClientHandler implements Runnable {
   private ItemHandler itemHandler;
   private String recieved;
 
+  private static List<String> messageList;
+  private static List<ClientHandler> clientList;
+
   public ClientHandler(Socket socket, ItemHandler itemHandler) {
     this.client = socket;
     this.itemHandler = itemHandler;
+    this.clientList = AuctionServer.getClientList();
+    this.messageList = new ArrayList<String>();
   }
 
   public void run() {
@@ -29,6 +34,12 @@ public class ClientHandler implements Runnable {
       System.out.println("\nWaiting for client input...");
 
       do {
+        if (!messageList.isEmpty()) {
+          String message = messageList.get(messageList.size() - 1);
+          messageList.remove(messageList.size() - 1);
+          output.println(message);
+        }
+
         recieved = input.nextLine();
         String[] parts = recieved.split(",");
         Message msg = new Message(parts[0], parts[1]);
@@ -43,6 +54,7 @@ public class ClientHandler implements Runnable {
             output.println("You are the highest bidder");
             itemHandler.setItemBid(bid);
             itemHandler.setUsername(msg.getUsername());
+            notifyClients("Test");
           } else {
             output.println("Bid is less then the highest bid");
           }
@@ -69,5 +81,16 @@ public class ClientHandler implements Runnable {
 
   public void setTimer(int seconds) {
 
+  }
+
+  public void sendMessage(String msg) {
+    output.println(msg);
+  }
+
+  public void notifyClients(String msg) {
+
+    for(ClientHandler client : clientList) {
+      client.sendMessage(msg);
+    }
   }
 }
