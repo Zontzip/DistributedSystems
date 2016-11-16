@@ -54,7 +54,8 @@ public class ClientHandler implements Runnable {
             output.println("You are the highest bidder");
             itemHandler.setItemBid(bid);
             itemHandler.setUsername(msg.getUsername());
-            notifyClients("Test");
+            notifyClients("User: " + msg.getUsername() + " bidded: " +
+                  msg.getValue() + " on item: " + itemHandler.getItemName());
           } else {
             output.println("Bid is less then the highest bid");
           }
