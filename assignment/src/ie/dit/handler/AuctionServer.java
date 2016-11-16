@@ -11,9 +11,9 @@ public class AuctionServer {
 
   private static ServerSocket serverSocket;
   private static final int PORT = 8080;
-  private static List<Item> auctionItems;
+
+  private static AuctionHandler auctionHandler;
   private static List<ClientHandler> clientList;
-  public static ItemHandler itemHandler;
 
   public static void main(String[] args) throws IOException {
 
@@ -26,65 +26,23 @@ public class AuctionServer {
 			System.exit(1);
     }
 
-    auctionItems = new ArrayList<Item>();
+    auctionHandler = AuctionHandler.getInstance();
     clientList = new ArrayList<ClientHandler>();
-
-    addItem("Bicycle", 100);
-    addItem("Car", 500);
-    addItem("Boat", 9000);
-    addItem("Wheelbarrow", 20);
-    addItem("House", 50000);
-
-    try {
-      itemHandler = new ItemHandler(auctionItems.get(0));
-    } catch (Exception e) {
-      System.err.println("Couldn't initialise ItemHandler: " + e.getMessage());
-      System.exit(1);
-    }
 
     do {
       try {
-        // Wait for client...
         Socket client = serverSocket.accept();
 
-        System.out.println("\nA client has connected.");
-
-        ClientHandler handler = new ClientHandler(client, itemHandler);
+        ClientHandler handler = new ClientHandler(client);
         Thread thread = new Thread(handler);
         thread.start();
-        addClient(handler);
+
+        clientList.add(handler);
+        System.out.println("\nA client has connected.");
       }
       catch (IOException err) {
         err.printStackTrace();
       }
     } while(true);
-  }
-
-  public static synchronized void addItem(String name, int price) {
-    auctionItems.add(new Item(name, price));
-  }
-
-  public static synchronized void removeItem(String name) {
-    Iterator<Item> it = auctionItems.iterator();
-
-    while (it.hasNext()) {
-      Item item = it.next();
-      if (item.getName().equals(name)) {
-        it.remove();
-      }
-    }
-  }
-
-  public static synchronized void addClient(ClientHandler client) {
-    System.out.println("Client added to list");
-    clientList.add(client);
-  }
-
-  public static List<ClientHandler> getClientList() {
-    return clientList;
-  }
-
-  public static List<Item> getItemList() {
-    return auctionItems;
   }
 }

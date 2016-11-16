@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
   private static List<String> messageList;
   private static List<ClientHandler> clientList;
 
-  public ClientHandler(Socket socket, ItemHandler itemHandler) {
+  public ClientHandler(Socket socket) {
     this.client = socket;
     this.itemHandler = itemHandler;
     this.clientList = AuctionServer.getClientList();

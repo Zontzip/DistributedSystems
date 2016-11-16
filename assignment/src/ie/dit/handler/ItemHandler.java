@@ -7,80 +7,38 @@ import java.util.*;
 import ie.dit.business.Message;
 import ie.dit.business.Item;
 
-public class ItemHandler extends Thread {
-  private Item currentItem;
+public class ItemHandler {
+  private static ItemFactory itemFactory;
+  private Item item;
   private String highestBidder;
-  private Timer timer;
-  private static int countdown;
-  private static List<ClientHandler> clientList;
+  private int highestBid;
 
-  public ItemHandler(Item currentItem) {
-    setItem(currentItem);
-    timer = new Timer();
-    setTime();
-    // Run timer task every 10 seconds, with first execution after 0 seconds
-    timer.schedule(new UpdateTask(), 0, 10000);
-    this.clientList = AuctionServer.getClientList();
-  }
-
-  class UpdateTask extends TimerTask {
-    public void run() {
-      if (countdown <= 0) {
-        timer.cancel();
-        notifyClients("Auction has ended");
-        finalizeAuction();
-      } else {
-        notifyClients("There is " + countdown + " secs left");
-        countdown = countdown - 10;
-      }
-    }
+  public ItemHandler() {
+    itemFactory = ItemFactory.getInstance();
+    setItem(itemFactory.getItem());
   }
 
   public void setItem(Item item) {
-    this.currentItem = item;
+    this.item = item;
   }
 
-  public String getItemName() {
-    return currentItem.getName();
+  public Item getItem(Item item) {
+    return this.item;
   }
 
-  public int getItemBid() {
-    return currentItem.getBid();
-  }
-
-  public void setItemBid(int bid) {
-    this.currentItem.setBid(bid);
-  }
-
-  public void setUsername(String bidder) {
+  public void setHighestBidder(String bidder) {
     this.highestBidder = bidder;
   }
 
-  public String getUsername() {
+  public String getHighestBidder() {
     return this.highestBidder;
   }
 
-  public void setTime() {
-    this.countdown = 60;
+  public void setHighestBid(int bid) {
+    this.highestBid = bid;
   }
 
-  public int getTime() {
-    return this.countdown;
+  public int getHighestBid() {
+    return this.highestBid;
   }
-
-  public void notifyClients(String msg) {
-
-    for(ClientHandler client : clientList) {
-      client.sendMessage(msg);
-    }
-  }
-
-  public void finalizeAuction() {
-    if (getUsername() == null) {
-      notifyClients("Item not sold");
-    } else {
-      notifyClients("Item was sold to: " + getUsername());
-    }
-  }
-
 }
