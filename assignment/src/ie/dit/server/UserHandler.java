@@ -15,12 +15,16 @@ public class UserHandler {
   Socket socket;
   private ClientHandler clientHandler;
   private String username;
+  private DataOutputStream outputStream;
 
   public UserHandler(ClientHandler clientHandler) {
     this.socket = clientHandler.client;
     this.clientHandler = clientHandler;
     setUserName(generateRandomName());
     System.out.println(getUserName());
+    try {
+      outputStream = new DataOutputStream(socket.getOutputStream());
+    } catch (IOException e) {}
   }
 
   public String getUserName() {
@@ -33,7 +37,6 @@ public class UserHandler {
 
   public void sendMessage(String msg) {
     try {
-      DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
       outputStream.writeUTF(msg);
       outputStream.flush();
     } catch (IOException e) {}
@@ -49,6 +52,8 @@ public class UserHandler {
    */
   public void handleMessage(String msg) {
     int currentBid = getHighestBid();
+
+    System.out.println("HEY!!");
 
     if (isNumeric(msg)) {
       int bid = Integer.parseInt(msg);
