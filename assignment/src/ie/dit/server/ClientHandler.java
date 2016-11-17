@@ -23,6 +23,9 @@ public class ClientHandler implements Runnable {
     this.auctionHandler = AuctionHandler.getInstance();
     this.userHandler = new UserHandler(this);
     this.auctionHandler.addUserHandler(this.userHandler);
+    /**
+     * Notify client of auction info
+     */
     this.userHandler.sendMessage(this.userHandler.generateGreeting());
     try {
       this.inputStream = new DataInputStream(socket.getInputStream());
@@ -32,7 +35,7 @@ public class ClientHandler implements Runnable {
   /**
    * Scan inbox and outbox for new messages. Messages can be added to outbox (to
    * be delivered to the client) by the user handler and added to inbox by the
-   * auction server.
+   * auction server. ---- REMOVED DUE TO BROKEN FUNCTIONALITY
    */
   public void run() {
       do {

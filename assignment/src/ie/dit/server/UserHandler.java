@@ -58,8 +58,12 @@ public class UserHandler {
 
       if (bid > currentBid) {
         sendMessage("You are the highest bidder");
+        /**
+         * Set new highest bidder and reset bid period
+         */
         this.clientHandler.auctionHandler.setHighestBid(bid);
         this.clientHandler.auctionHandler.setHghestBidder(getUserName());
+        this.clientHandler.auctionHandler.resetTimer();
 
         sendMessageToGroup("User: " + getUserName() + " bidded: " +
               msg + " on item: " + this.clientHandler.auctionHandler
@@ -69,7 +73,8 @@ public class UserHandler {
       }
     } else {
         if (msg.equals("I") || msg.equals("i")) {
-          sendMessage("The current bid is " + currentBid);
+          sendMessage("The current bid is " + currentBid + " for item: " +
+            this.clientHandler.auctionHandler.getItemName());
         } else if (msg.equals("q") || msg.equals("Q")) {
           System.out.println("Client disconnected");
           sendMessage("Goodbye!");
