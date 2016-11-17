@@ -23,7 +23,7 @@ public class ClientHandler implements Runnable {
     this.auctionHandler = AuctionHandler.getInstance();
     this.userHandler = new UserHandler(this);
     this.auctionHandler.addUserHandler(this.userHandler);
-    this.userHandler.generateGreeting();
+    this.userHandler.sendMessage(this.userHandler.generateGreeting());
     try {
       this.inputStream = new DataInputStream(socket.getInputStream());
     } catch (IOException e) {}

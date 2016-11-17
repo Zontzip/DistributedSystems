@@ -60,4 +60,8 @@ public class ItemFactory {
     int randomNum = rand.nextInt((max - min)) + min;
     return randomNum;
   }
+
+  public int remainingItems() {
+    return auctionItems.size();
+  }
 }

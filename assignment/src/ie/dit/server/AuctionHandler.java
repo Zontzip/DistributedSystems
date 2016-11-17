@@ -19,7 +19,7 @@ public class AuctionHandler {
      * Run timer task every 10 seconds, with first execution after 0 seconds
      */
     timer = new Timer();
-    setTime();
+    setTime(20);
     timer.schedule(new UpdateTask(), 0, 10000);
   }
 
@@ -101,8 +101,8 @@ public class AuctionHandler {
     return this.itemHandler.getItemName();
   }
 
-  public void setTime() {
-    this.countdown = 60;
+  public void setTime(int time) {
+    this.countdown = time;
   }
 
   public int getTime() {
@@ -112,8 +112,19 @@ public class AuctionHandler {
   public void finalizeAuction() {
     if (getHighestBidder() == null) {
       messageClients("Item not sold");
+
     } else {
       messageClients("Item was sold to: " + getHighestBidder());
+      if (itemHandler.getItemCount() == 0) {
+        messageClients("Auction has ended, thank you!");
+        System.exit(0);
+      }
+      itemHandler.removeItem(itemHandler.getItem());
     }
+    timer = new Timer();
+    setTime(20);
+    timer.schedule(new UpdateTask(), 0, 10000);
+    itemHandler.newItem();
+    messageClients("New auction started");
   }
 }

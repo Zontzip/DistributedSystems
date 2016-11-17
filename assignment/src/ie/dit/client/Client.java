@@ -37,7 +37,7 @@ public class Client {
      */
     public void run() {
       do {
-        System.out.println("\nEnter a value: ");
+        System.out.println("\nEnter a value: \n");
         try {
           String msg = userInput.readLine();
           outputStream.writeUTF(msg);

@@ -53,8 +53,6 @@ public class UserHandler {
   public void handleMessage(String msg) {
     int currentBid = getHighestBid();
 
-    System.out.println("HEY!!");
-
     if (isNumeric(msg)) {
       int bid = Integer.parseInt(msg);
 
@@ -100,7 +98,7 @@ public class UserHandler {
     return randomName;
   }
 
-  public void generateGreeting() {
+  public String generateGreeting() {
     String greeting = ("\n*****************************************************" +
                         "\nYou have entered the Auction - " + getUserName() +
                         "\n\nCurrent item: " + getItem() +
@@ -109,7 +107,7 @@ public class UserHandler {
                         "\nI - Get current bid info " +
                         "\nQ - Quit" +
                         "\n*****************************************************");
-    sendMessage(greeting);
+    return greeting;
   }
 
   public String getItem() {

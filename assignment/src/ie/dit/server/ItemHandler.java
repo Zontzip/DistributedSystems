@@ -17,16 +17,16 @@ public class ItemHandler {
 
   public ItemHandler() {
     itemFactory = ItemFactory.getInstance();
-    setItem(itemFactory.getItem());
-    setHighestBid(this.item.getBid());
+    newItem();
     System.out.println(this.item.toString());
   }
 
-  public void setItem(Item item) {
-    this.item = item;
+  public void newItem() {
+    this.item = itemFactory.getItem();
+    setHighestBid(this.item.getBid());
   }
 
-  public Item getItem(Item item) {
+  public Item getItem() {
     return this.item;
   }
 
@@ -48,5 +48,13 @@ public class ItemHandler {
 
   public String getItemName() {
     return this.item.getName();
+  }
+
+  public void removeItem(Item item) {
+    this.itemFactory.removeItem(item.getName());
+  }
+
+  public int getItemCount() {
+    return this.itemFactory.remainingItems();
   }
 }
