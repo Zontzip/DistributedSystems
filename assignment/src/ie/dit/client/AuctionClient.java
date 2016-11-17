@@ -1,31 +1,90 @@
 package ie.dit.client;
 
-import java.io.*;
 import java.net.*;
+import java.io.*;
 import java.util.*;
 
-public class AuctionClient {
+import ie.dit.business.Message;
+import ie.dit.business.Item;
 
+public class AuctionClient  {
+
+  private static Socket socket;
   private static InetAddress host;
   private static final int PORT = 8080;
-  private static Integer currentTime;
-  private static Socket link;
-  private static PrintWriter output;
-  private static Scanner networkInput;
-  private static Scanner userInput;
 
   public static void main(String[] args) {
-
-    // Try to establish a connection with the server on localhost
     try {
-      host = InetAddress.getLocalHost();
+      try {
+        host = InetAddress.getLocalHost();
+      }
+      catch (UnknownHostException uhEx){
+        System.out.println("\nHost ID not found");
+        System.exit(1);
+      }
+
+      socket = new Socket(host, PORT);
+      Client client = new Client(socket);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    // Else exit the application
-    catch (UnknownHostException uhEx){
-      System.out.println("\nHost ID not found");
-      System.exit(1);
+  }
+}
+
+class Client {
+  public Client(Socket socket) {
+    createThreads(socket);
+  }
+
+  public void createThreads(Socket socket) {
+    try {
+      ServerResponseHandler networkInput = new ServerResponseHandler(socket);
+      new Thread(networkInput).start();
+
+      KeyboardInput keyInput = new KeyboardInput(socket);
+      new Thread(networkInput).start();
+    } catch(IOException e) {
+      System.out.println("Error creating worker IO threads");
     }
-    Thread clientThread = new Thread(new ClientThreadHandler(host, PORT));
-    clientThread.start();
+  }
+
+  private class KeyboardInput implements Runnable {
+    private Scanner userInput;
+    private PrintWriter output;
+
+    KeyboardInput(Socket socket) throws IOException {
+      userInput = new Scanner(System.in);
+    }
+
+    public void run() {
+      do {
+        System.out.println("\nEnter a value: ");
+        String msg = userInput.nextLine();
+        output.println(msg);
+
+        if (msg.equals("q") || msg.equals("Q")) {
+          break;
+        }
+      } while(true);
+
+      System.out.println("Goodbye!");
+      System.exit(0);
+    }
+  }
+
+  private class ServerResponseHandler implements Runnable {
+    private Scanner networkInput;
+
+    ServerResponseHandler(Socket socket) throws IOException {
+      networkInput = new Scanner(socket.getInputStream());
+    }
+
+    public void run() {
+      String serverMessage;
+      while(true) {
+          serverMessage = networkInput.nextLine().toString();
+          System.out.println(serverMessage);
+      }
+    }
   }
 }

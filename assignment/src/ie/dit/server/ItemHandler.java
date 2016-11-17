@@ -41,4 +41,8 @@ public class ItemHandler {
   public int getHighestBid() {
     return this.highestBid;
   }
+
+  public String getItemName() {
+    return this.item.getName();
+  }
 }

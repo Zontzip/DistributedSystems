@@ -34,7 +34,7 @@ public class AuctionHandler {
     userList.add(userHandler);
   }
 
-  public void removeUser(String username) {
+  public void removeClient(String username) {
     Iterator<UserHandler> it = userList.iterator();
     while (it.hasNext()) {
       UserHandler userHandler = it.next();
@@ -50,7 +50,34 @@ public class AuctionHandler {
 
   public void MessageClients(String msg) {
     for(UserHandler userHandler : userList) {
+      ListClients();
       userHandler.sendMessageToClient(msg);
     }
+  }
+
+  public void ListClients() {
+    for(UserHandler userHandler : userList) {
+      System.out.println(userHandler.getUserName());
+    }
+  }
+
+  public int getHighestBid() {
+    return this.itemHandler.getHighestBid();
+  }
+
+  public void setHighestBid(int bid) {
+    this.itemHandler.setHighestBid(bid);
+  }
+
+  public String getHighestBidder() {
+    return this.itemHandler.getHighestBidder();
+  }
+
+  public void setHghestBidder(String username) {
+    this.itemHandler.setHighestBidder(username);
+  }
+
+  public String getItemName() {
+    return this.itemHandler.getItemName();
   }
 }

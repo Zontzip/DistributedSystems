@@ -10,7 +10,7 @@ public class ClientHandler implements Runnable {
   private Scanner input;
   private PrintWriter output;
 
-  private static AuctionHandler auctionHandler;
+  public static AuctionHandler auctionHandler;
   private UserHandler userHandler;
   private static Queue<String> inbox;
   private static Queue<String> outbox;
@@ -43,6 +43,7 @@ public class ClientHandler implements Runnable {
    * auction server.
    */
   public void run() {
+    
       do {
         String recieved = input.nextLine();
         inbox.add(recieved);
@@ -63,5 +64,14 @@ public class ClientHandler implements Runnable {
 
   public void addToOutbox(String msg) {
     outbox.add(msg);
+  }
+
+  public void disconnectClient() {
+    this.auctionHandler.removeClient(this.userHandler.getUserName());
+    try {
+      client.close();
+    } catch (IOException e) {
+      System.out.println("Could not disconnet client: " + e);
+    }
   }
 }
