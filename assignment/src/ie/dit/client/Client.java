@@ -4,46 +4,50 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-class Client {
-  public Client(Socket socket) {
-    createThreads(socket);
-  }
-
+public class Client {
+  Socket socket;
   /**
    * Create seperate threads for keyboard input and server output. This prevents
    * the system having to wait for user input as the buffer fills.
    */
-  public void createThreads(Socket socket) {
+  public Client(Socket socket) {
+    this.socket = socket;
     try {
-      ServerResponseHandler networkInput = new ServerResponseHandler(socket);
-      new Thread(networkInput).start();
-
-      KeyboardInput keyInput = new KeyboardInput(socket);
-      new Thread(networkInput).start();
+      new Thread(new KeyboardInput(socket)).start();
+      new Thread(new ServerResponseHandler(socket)).start();
     } catch(IOException e) {
       System.out.println("Error creating worker IO threads");
     }
   }
 
   private class KeyboardInput implements Runnable {
-    private Scanner userInput;
-    private PrintWriter output;
+    private BufferedReader userInput;
+    private DataOutputStream outputStream;
 
     KeyboardInput(Socket socket) throws IOException {
-      userInput = new Scanner(System.in);
+      userInput = new BufferedReader(new InputStreamReader(System.in));
+      try {
+        this.outputStream = new DataOutputStream(socket.getOutputStream());
+      } catch (IOException e) {
+        System.out.println("Comms error");
+      }
     }
-
     /**
-     * Run until the user quits
+     * Run until the user quits.
      */
     public void run() {
       do {
         System.out.println("\nEnter a value: ");
-        String msg = userInput.nextLine();
-        output.println(msg);
+        try {
+          String msg = userInput.readLine();
+          outputStream.writeUTF(msg);
+          outputStream.flush();
 
-        if (msg.equals("q") || msg.equals("Q")) {
-          break;
+          if (msg.equals("q") || msg.equals("Q")) {
+            break;
+          }
+        } catch (IOException e) {
+          System.out.println("Comms error");
         }
       } while(true);
 
@@ -53,17 +57,24 @@ class Client {
   }
 
   private class ServerResponseHandler implements Runnable {
-    private Scanner networkInput;
+    private DataInputStream inputStream;
 
     ServerResponseHandler(Socket socket) throws IOException {
-      networkInput = new Scanner(socket.getInputStream());
+      try {
+        inputStream = new DataInputStream(socket.getInputStream());
+      } catch (IOException e) {
+        System.out.println("Comms error");
+      }
     }
 
     public void run() {
-      String serverMessage;
       while(true) {
-          serverMessage = networkInput.nextLine().toString();
-          System.out.println(serverMessage);
+          try {
+            String serverMessage = inputStream.readUTF();
+            System.out.println(serverMessage);
+          } catch (IOException e) {
+            System.out.println("Comms error");
+          }
       }
     }
   }

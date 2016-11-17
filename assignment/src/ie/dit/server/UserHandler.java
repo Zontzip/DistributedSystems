@@ -18,7 +18,7 @@ public class UserHandler {
   public UserHandler(ClientHandler clientHandler) {
     this.clientHandler = clientHandler;
     setUserName(generateRandomName());
-    generateGreeting();
+    System.out.println(getUserName());
   }
 
   public String getUserName() {
@@ -39,7 +39,7 @@ public class UserHandler {
 
   /**
    * If a message is numeric, it's considered a bid. Else, if it matches one of
-   * the commands, the command is executed. 
+   * the commands, the command is executed.
    */
   public void handleMessage(String msg) {
     int currentBid = this.clientHandler.auctionHandler.getHighestBid();
@@ -90,13 +90,6 @@ public class UserHandler {
   }
 
   public void generateGreeting() {
-    sendMessageToClient("\n*****************************************************" +
-                        "\nYou have entered the Auction - " + getUserName() +
-                        "\n\nCurrent item: " +
-                        "\nCurrent bid: " +
-                        "\n\nPlace a numeric bid that is greater then the current bid. " +
-                        "\nI - Get current bid info " +
-                        "\nQ - Quit" +
-                        "\n*****************************************************");
+    sendMessageToClient("Hi");
   }
 }
