@@ -12,10 +12,12 @@ import ie.dit.business.*;
  * update data to client screen.
  */
 public class UserHandler {
+  Socket socket;
   private ClientHandler clientHandler;
   private String username;
 
   public UserHandler(ClientHandler clientHandler) {
+    this.socket = clientHandler.client;
     this.clientHandler = clientHandler;
     setUserName(generateRandomName());
     System.out.println(getUserName());
@@ -29,8 +31,12 @@ public class UserHandler {
     this.username = username;
   }
 
-  public void sendMessageToClient(String msg) {
-    this.clientHandler.addToOutbox(msg);
+  public void sendMessage(String msg) {
+    try {
+      DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+      outputStream.writeUTF(msg);
+      outputStream.flush();
+    } catch (IOException e) {}
   }
 
   public void sendMessageToGroup(String msg) {
@@ -42,13 +48,13 @@ public class UserHandler {
    * the commands, the command is executed.
    */
   public void handleMessage(String msg) {
-    int currentBid = this.clientHandler.auctionHandler.getHighestBid();
+    int currentBid = getHighestBid();
 
     if (isNumeric(msg)) {
       int bid = Integer.parseInt(msg);
 
       if (bid > currentBid) {
-        sendMessageToClient("You are the highest bidder");
+        sendMessage("You are the highest bidder");
         this.clientHandler.auctionHandler.setHighestBid(bid);
         this.clientHandler.auctionHandler.setHghestBidder(getUserName());
 
@@ -56,17 +62,17 @@ public class UserHandler {
               msg + " on item: " + this.clientHandler.auctionHandler
               .getItemName());
       } else {
-        sendMessageToClient("Bid is less then the highest bid");
+        sendMessage("Bid is less then the highest bid");
       }
     } else {
         if (msg.equals("I") || msg.equals("i")) {
-          sendMessageToClient("The current bid is " + currentBid);
+          sendMessage("The current bid is " + currentBid);
         } else if (msg.equals("q") || msg.equals("Q")) {
           System.out.println("Client disconnected");
-          sendMessageToClient("Goodbye!");
+          sendMessage("Goodbye!");
           clientHandler.disconnectClient();
         } else {
-          sendMessageToClient("Value not recognized");
+          sendMessage("Value not recognized");
         }
     }
   }
@@ -90,6 +96,22 @@ public class UserHandler {
   }
 
   public void generateGreeting() {
-    sendMessageToClient("Hi");
+    String greeting = ("\n*****************************************************" +
+                        "\nYou have entered the Auction - " + getUserName() +
+                        "\n\nCurrent item: " + getItem() +
+                        "\nCurrent bid: " + String.valueOf(getHighestBid()) +
+                        "\n\nPlace a numeric bid that is greater then the current bid. " +
+                        "\nI - Get current bid info " +
+                        "\nQ - Quit" +
+                        "\n*****************************************************");
+    sendMessage(greeting);
+  }
+
+  public String getItem() {
+    return this.clientHandler.auctionHandler.getItemName();
+  }
+
+  public int getHighestBid() {
+    return this.clientHandler.auctionHandler.getHighestBid();
   }
 }

@@ -18,6 +18,7 @@ public class ItemHandler {
   public ItemHandler() {
     itemFactory = ItemFactory.getInstance();
     setItem(itemFactory.getItem());
+    setHighestBid(this.item.getBid());
     System.out.println(this.item.toString());
   }
 

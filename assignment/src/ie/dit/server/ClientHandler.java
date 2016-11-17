@@ -6,14 +6,12 @@ import java.util.*;
 
 public class ClientHandler implements Runnable {
 
-  private Socket client;
-  private Scanner input;
-  private PrintWriter output;
+  public Socket client;
+  private DataInputStream inputStream;
+  private DataOutputStream outputStream;
 
   public static AuctionHandler auctionHandler;
   private UserHandler userHandler;
-  private static Queue<String> inbox;
-  private static Queue<String> outbox;
 
   /**
    * Constructor takes the new socket to run in a thread, the auction handler
@@ -25,15 +23,7 @@ public class ClientHandler implements Runnable {
     this.auctionHandler = AuctionHandler.getInstance();
     this.userHandler = new UserHandler(this);
     this.auctionHandler.addUserHandler(this.userHandler);
-
-    this.inbox = new LinkedList<>();
-    this.outbox = new LinkedList<>();
-    try {
-      this.input = new Scanner(client.getInputStream(), "UTF8");
-      this.output = new PrintWriter(client.getOutputStream(), true);
-    } catch(IOException e) {
-      e.printStackTrace();
-    }
+    this.userHandler.generateGreeting();
   }
 
   /**
@@ -42,27 +32,8 @@ public class ClientHandler implements Runnable {
    * auction server.
    */
   public void run() {
-
       do {
-        String recieved = input.nextLine();
-        inbox.add(recieved);
-        System.out.println("Message added to queue");
-
-        while(!inbox.isEmpty()) {
-          String msg = inbox.remove();
-          System.out.println("Message: " + msg);
-          userHandler.handleMessage(msg);
-        }
-
-        while(!outbox.isEmpty()) {
-          String msg = outbox.remove();
-          output.println(msg);
-        }
       } while (true);
-  }
-
-  public void addToOutbox(String msg) {
-    outbox.add(msg);
   }
 
   public void disconnectClient() {
@@ -70,7 +41,7 @@ public class ClientHandler implements Runnable {
     try {
       client.close();
     } catch (IOException e) {
-      System.out.println("Could not disconnet client: " + e);
+      System.out.println("Could not disconnect client: " + e);
     }
   }
 }

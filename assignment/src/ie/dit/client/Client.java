@@ -1,7 +1,7 @@
 package ie.dit.client;
 
-import java.net.*;
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 public class Client {
@@ -29,7 +29,7 @@ public class Client {
       try {
         this.outputStream = new DataOutputStream(socket.getOutputStream());
       } catch (IOException e) {
-        System.out.println("Comms error");
+        System.out.println("Comms error reading key input");
       }
     }
     /**
@@ -46,9 +46,7 @@ public class Client {
           if (msg.equals("q") || msg.equals("Q")) {
             break;
           }
-        } catch (IOException e) {
-          System.out.println("Comms error");
-        }
+        } catch (IOException e) {}
       } while(true);
 
       System.out.println("Goodbye!");
@@ -62,9 +60,7 @@ public class Client {
     ServerResponseHandler(Socket socket) throws IOException {
       try {
         inputStream = new DataInputStream(socket.getInputStream());
-      } catch (IOException e) {
-        System.out.println("Comms error");
-      }
+      } catch (IOException e) {}
     }
 
     public void run() {
@@ -73,9 +69,12 @@ public class Client {
             String serverMessage = inputStream.readUTF();
             System.out.println(serverMessage);
           } catch (IOException e) {
-            System.out.println("Comms error");
+            System.out.println("Comms error reading server data");
+            break;
           }
       }
+      System.out.println("Goodbye!");
+      System.exit(0);
     }
   }
 }

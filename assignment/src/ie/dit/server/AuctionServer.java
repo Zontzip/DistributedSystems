@@ -10,7 +10,6 @@ public class AuctionServer {
   private static final int PORT = 8080;
 
   private static AuctionHandler auctionHandler;
-  private static List<ClientHandler> clientList;
 
   public static void main(String[] args) throws IOException {
 
@@ -24,7 +23,6 @@ public class AuctionServer {
     }
 
     auctionHandler = AuctionHandler.getInstance();
-    clientList = new ArrayList<ClientHandler>();
 
     /**
      * Each new client is assigned their own client handler. This will take care
@@ -33,12 +31,7 @@ public class AuctionServer {
     do {
       try {
         Socket client = serverSocket.accept();
-
-        ClientHandler handler = new ClientHandler(client);
-        Thread thread = new Thread(handler);
-        thread.start();
-
-        clientList.add(handler);
+        new Thread(new ClientHandler(client)).start();
         System.out.println("\nA client has connected.");
       }
       catch (IOException err) {

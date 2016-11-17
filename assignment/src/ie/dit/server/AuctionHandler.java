@@ -9,9 +9,31 @@ public class AuctionHandler {
   private static ItemHandler itemHandler;
 
   private static List<UserHandler> userList;
+  private Timer timer;
+  private static int countdown;
 
   private AuctionHandler() {
     userList = new ArrayList<UserHandler>();
+
+    /**
+     * Run timer task every 10 seconds, with first execution after 0 seconds
+     */
+    timer = new Timer();
+    setTime();
+    timer.schedule(new UpdateTask(), 0, 10000);
+  }
+
+  class UpdateTask extends TimerTask {
+    public void run() {
+      if (countdown <= 0) {
+        timer.cancel();
+        messageClients("Auction has ended");
+        finalizeAuction();
+      } else {
+        messageClients("There is " + countdown + " secs left");
+        countdown = countdown - 10;
+      }
+    }
   }
   /**
    * Singleton design pattern, only one auction handler can exist.
@@ -55,7 +77,7 @@ public class AuctionHandler {
    */
   public void messageClients(String msg) {
     for(UserHandler userHandler : userList) {
-      userHandler.sendMessageToClient(msg);
+      userHandler.sendMessage(msg);
     }
   }
 
@@ -77,5 +99,21 @@ public class AuctionHandler {
 
   public String getItemName() {
     return this.itemHandler.getItemName();
+  }
+
+  public void setTime() {
+    this.countdown = 60;
+  }
+
+  public int getTime() {
+    return this.countdown;
+  }
+
+  public void finalizeAuction() {
+    if (getHighestBidder() == null) {
+      messageClients("Item not sold");
+    } else {
+      messageClients("Item was sold to: " + getHighestBidder());
+    }
   }
 }
