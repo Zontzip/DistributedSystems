@@ -26,6 +26,10 @@ public class AuctionServer {
     auctionHandler = AuctionHandler.getInstance();
     clientList = new ArrayList<ClientHandler>();
 
+    /**
+     * Each new client is assigned their own client handler. This will take care
+     * of communication between the client and server in a new thread.
+     */
     do {
       try {
         Socket client = serverSocket.accept();

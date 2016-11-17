@@ -6,23 +6,19 @@ import java.util.*;
 
 import ie.dit.business.*;
 
+/**
+ * Handles logic between the client and the server. If a user wants to send a
+ * message, they can do so through one these methods. Also handles sending of
+ * update data to client screen.
+ */
 public class UserHandler {
-  private User user;
   private ClientHandler clientHandler;
   private String username;
 
   public UserHandler(ClientHandler clientHandler) {
     this.clientHandler = clientHandler;
-    setUserName("Joe");
-    //generateGreeting();
-  }
-
-  public User getUser() {
-    return this.user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
+    setUserName(generateRandomName());
+    generateGreeting();
   }
 
   public String getUserName() {
@@ -38,9 +34,13 @@ public class UserHandler {
   }
 
   public void sendMessageToGroup(String msg) {
-    this.clientHandler.auctionHandler.MessageClients(msg);
+    this.clientHandler.auctionHandler.messageClients(msg);
   }
 
+  /**
+   * If a message is numeric, it's considered a bid. Else, if it matches one of
+   * the commands, the command is executed. 
+   */
   public void handleMessage(String msg) {
     int currentBid = this.clientHandler.auctionHandler.getHighestBid();
 
@@ -75,7 +75,7 @@ public class UserHandler {
     return str.matches("-?\\d+(\\.\\d+)?");
   }
 
-  public String generateRandomname() {
+  public String generateRandomName() {
     Random r = new Random(); // just create one and keep it around
     String alphabet = "abcdefghijklmnopqrstuvwxyz";
 

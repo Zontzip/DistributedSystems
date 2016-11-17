@@ -19,6 +19,9 @@ public class ItemFactory {
     addItem("House", 50000);
   }
 
+  /**
+   * Singleton design pattern, only one factory can exist.
+   */
   public static synchronized ItemFactory getInstance() {
     if(itemFactory == null) {
       itemFactory = new ItemFactory();
@@ -35,6 +38,9 @@ public class ItemFactory {
     return (auctionItems.get(randomIndex));
   }
 
+  /**
+   * Remove items as they are sold to prevent resale.
+   */
   public static synchronized void removeItem(String name) {
     Iterator<Item> it = auctionItems.iterator();
     while (it.hasNext()) {
@@ -45,6 +51,10 @@ public class ItemFactory {
     }
   }
 
+  /**
+   * Generate a random number. This is used to randommly select an item for
+   * bidding.
+   */
   public static int randInt(int min, int max) {
     Random rand = new Random();
     int randomNum = rand.nextInt((max - min)) + min;

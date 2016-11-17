@@ -14,7 +14,6 @@ public class ClientHandler implements Runnable {
   private UserHandler userHandler;
   private static Queue<String> inbox;
   private static Queue<String> outbox;
-  private static List<ClientHandler> clientList;
 
   /**
    * Constructor takes the new socket to run in a thread, the auction handler
@@ -43,7 +42,7 @@ public class ClientHandler implements Runnable {
    * auction server.
    */
   public void run() {
-    
+
       do {
         String recieved = input.nextLine();
         inbox.add(recieved);

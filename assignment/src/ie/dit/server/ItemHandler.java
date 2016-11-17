@@ -6,6 +6,9 @@ import java.util.*;
 
 import ie.dit.business.Item;
 
+/**
+ * Handles item logic for the system.
+ */
 public class ItemHandler {
   private static ItemFactory itemFactory;
   private Item item;

@@ -13,7 +13,9 @@ public class AuctionHandler {
   private AuctionHandler() {
     userList = new ArrayList<UserHandler>();
   }
-
+  /**
+   * Singleton design pattern, only one auction handler can exist.
+   */
   public static synchronized AuctionHandler getInstance() {
     if(auctionHandler == null) {
       auctionHandler = new AuctionHandler();
@@ -48,16 +50,12 @@ public class AuctionHandler {
     return this.userList;
   }
 
-  public void MessageClients(String msg) {
+  /**
+   * Primary method of messaging all clients
+   */
+  public void messageClients(String msg) {
     for(UserHandler userHandler : userList) {
-      ListClients();
       userHandler.sendMessageToClient(msg);
-    }
-  }
-
-  public void ListClients() {
-    for(UserHandler userHandler : userList) {
-      System.out.println(userHandler.getUserName());
     }
   }
 

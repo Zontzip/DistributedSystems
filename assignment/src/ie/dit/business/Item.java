@@ -5,6 +5,7 @@ import java.util.*;
 public class Item {
   private String name;
   private int bid;
+  private boolean sold = false;
 
   public Item(String name, int startingBid) {
     setName(name);
@@ -25,6 +26,14 @@ public class Item {
 
   public void setBid(int bid) {
     this.bid = bid;
+  }
+
+  public void markAsSold() {
+    this.sold = true;
+  }
+
+  public boolean isSold() {
+    return this.sold;
   }
 
   public String toString() {
